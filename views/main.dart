@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/network_provider.dart';
 import '../model/authentication.dart';
+import './dashboard.dart';
+import 'dart:convert';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: 'Flutter Demo',
         theme: new ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-          // counter didn't reset back to zero; the application is not restarted.
           primarySwatch: Colors.green,
         ),
-        home: new Scaffold(body: new MainPage()));
+        home: new Scaffold(body: new MainPageStateful()));
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainPageStateful extends StatefulWidget {
+  @override
+  MainPage createState() => new MainPage();
+}
+
+class MainPage extends State<MainPageStateful> {
   final TextEditingController emailCl = new TextEditingController();
   final TextEditingController pwCl = new TextEditingController();
   final FocusNode pwFocusNode = FocusNode();
+
+  bool showLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class MainPage extends StatelessWidget {
             color: Colors.black));
     var emailTextField = new TextField(
         controller: emailCl,
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.done,
         onSubmitted: (String value) =>
             FocusScope.of(context).requestFocus(pwFocusNode),
         decoration: InputDecoration(
@@ -80,6 +81,7 @@ class MainPage extends StatelessWidget {
         controller: pwCl,
         textInputAction: TextInputAction.done,
         focusNode: pwFocusNode,
+        obscureText: true,
         onSubmitted: (String value) => login(context),
         decoration: InputDecoration(
             hintText: 'Please enter password', border: InputBorder.none));
@@ -114,30 +116,60 @@ class MainPage extends StatelessWidget {
           )),
         ));
 
+    var progressBar = new Container(
+        child: showLoading
+            ? Container(
+                child: new Container(
+                    alignment: Alignment.center,
+                    child: new CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+                    ),
+                    width: 10.0,
+                    height: 10.0),
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.black38,
+              )
+            : null);
+
     return new GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: new Container(
-            child: new SingleChildScrollView(
-                child: new Column(children: <Widget>[
-              imageLogo,
-              imageLogin,
-              emailColumn,
-              pwColumn,
-              loginBox
-            ])),
-            color: Colors.white,
-            padding: EdgeInsets.only(
-                left: 10.0, top: 40.0, right: 10.0, bottom: 20.0)));
+        child: new Stack(children: <Widget>[
+          new Container(
+              child: new SingleChildScrollView(
+                  child: new Column(children: <Widget>[
+                imageLogo,
+                imageLogin,
+                emailColumn,
+                pwColumn,
+                loginBox,
+              ])),
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                  left: 10.0, top: 40.0, right: 10.0, bottom: 20.0)),
+          progressBar
+        ]));
   }
 
   login(BuildContext context) async {
-    Map response = await NetworkProvider.post(
+    setState(() {
+      showLoading = true;
+    });
+    var response = await NetworkProvider.post(
         'login', new LoginRequest(emailCl.text, pwCl.text, true).toJson());
+    setState(() {
+      showLoading = false;
+    });
 
-    Scaffold.of(context).showSnackBar(new SnackBar(
-      content: new Text(response['data'].toString()),
-    ));
+    if (response['data'] != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userInfo', json.encode(response['data']));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    }
   }
 }

@@ -1,6 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class NetworkProvider {
@@ -15,6 +15,7 @@ class NetworkProvider {
         }).then((http.Response response) {
       final int statusCode = response.statusCode;
       if (statusCode < 200 || statusCode > 400 || json == null) {
+        print(response.toString());
         throw new Exception("Error while fetching data");
       }
       return new JsonDecoder().convert(response.body);

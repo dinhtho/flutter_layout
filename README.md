@@ -6,3 +6,6 @@ A new Flutter application.
 
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+# Parsing complex JSON in Flutter
+https://medium.com/flutter-community/parsing-complex-json-in-flutter-747c46655f51
