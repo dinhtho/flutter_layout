@@ -1,59 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../model/authentication.dart';
+import 'tabs/profile.dart';
+import 'tabs/home.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardScreen extends StatefulWidget {
   @override
-  DashboardState createState() => DashboardState();
+  State<DashboardScreen> createState() => DashboardState();
 }
 
-class DashboardState extends State<Dashboard> {
-  UserInfo userInfo;
+class DashboardState extends State<DashboardScreen> {
+  PageController pageController;
+  int page = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    loadLocalStorage();
+    pageController = new PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
+
+  void navigationTapped(int page) {
+    pageController.animateToPage(page,
+        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      this.page = page;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    String token = userInfo?.token ?? '';
-    String email = userInfo?.user?.email ?? '';
-    String name = userInfo?.user?.name ?? '';
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Screen"),
-      ),
-      body: Center(
-          child: Column(
-        children: <Widget>[
-          RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Go back!'),
-          ),
-          Text('Token: ' + token),
-          Text('Email: ' + email),
-          Text('Name: ' + name),
-        ],
-      )),
-    );
-  }
-
-  loadLocalStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final userInfoRaw = prefs.getString('userInfo');
-    var jsonRaw = json.decode(userInfoRaw);
-    var userInfo = UserInfo.fromJson(jsonRaw);
-    if (userInfo != null) {
-      setState(() {
-        this.userInfo = userInfo;
-      });
-    }
+    return Container(
+        child: Scaffold(
+            body: new PageView(
+              children: [
+                HomeScreen(),
+                Icon(Icons.directions_car),
+                ProfileScreen(),
+              ],
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: onPageChanged,
+              controller: pageController,
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: new Icon(Icons.home),
+                  title: new Text('Home'),
+                ),
+                BottomNavigationBarItem(
+                  icon: new Icon(Icons.mail),
+                  title: new Text('Messages'),
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), title: Text('Profile'))
+              ],
+              fixedColor: Colors.red,
+              onTap: navigationTapped,
+              currentIndex: page,
+            )),
+      );
   }
 }
