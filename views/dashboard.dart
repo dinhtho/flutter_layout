@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tabs/profile.dart';
 import 'tabs/home.dart';
+import 'tabs/map.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -37,34 +38,34 @@ class DashboardState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Scaffold(
-            body: new PageView(
-              children: [
-                HomeScreen(),
-                Icon(Icons.directions_car),
-                ProfileScreen(),
-              ],
-              physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: onPageChanged,
-              controller: pageController,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  icon: new Icon(Icons.home),
-                  title: new Text('Home'),
-                ),
-                BottomNavigationBarItem(
-                  icon: new Icon(Icons.mail),
-                  title: new Text('Messages'),
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), title: Text('Profile'))
-              ],
-              fixedColor: Colors.red,
-              onTap: navigationTapped,
-              currentIndex: page,
-            )),
-      );
+      child: Scaffold(
+          body: new PageView(
+            children: [
+              HomeScreen(),
+              MapsDemo(),
+              ProfileScreen(),
+            ],
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: onPageChanged,
+            controller: pageController,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: new Icon(Icons.home),
+                title: new Text('Home'),
+              ),
+              BottomNavigationBarItem(
+                icon: new Icon(Icons.mail),
+                title: new Text('Messages'),
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), title: Text('Profile'))
+            ],
+            fixedColor: Colors.red,
+            onTap: navigationTapped,
+            currentIndex: page,
+          )),
+    );
   }
 }
