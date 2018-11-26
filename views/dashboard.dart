@@ -56,8 +56,8 @@ class DashboardState extends State<DashboardScreen> {
                 title: new Text('Home'),
               ),
               BottomNavigationBarItem(
-                icon: new Icon(Icons.mail),
-                title: new Text('Messages'),
+                icon: new Icon(Icons.map),
+                title: new Text('Google Map'),
               ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.person), title: Text('Profile'))
