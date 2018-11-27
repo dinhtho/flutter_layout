@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import '../model/authentication.dart';
+import './dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -42,19 +46,35 @@ class SplashState extends State<SplashScreen> with TickerProviderStateMixin {
           ..addListener(() => this.setState(() {}))
           ..addStatusListener((AnimationStatus status) {
             if (status == AnimationStatus.completed) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
+              checkLogin();
             }
           });
 
     animationController0.forward();
   }
 
+  checkLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final userInfoRaw = prefs.getString('userInfo');
+    var jsonRaw = json.decode(userInfoRaw);
+    var userInfo = UserInfo.fromJson(jsonRaw);
+    var navigatedScreen;
+    if (userInfo != null && userInfo.token != null) {
+      navigatedScreen = DashboardScreen();
+    } else {
+      navigatedScreen = LoginScreen();
+    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => navigatedScreen),
+    );
+  }
+
   @override
   void dispose() {
     animationController0.dispose();
+    animationController1.dispose();
     super.dispose();
   }
 
