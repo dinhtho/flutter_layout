@@ -9,7 +9,8 @@ class MapsDemo extends StatefulWidget {
   State createState() => MapsDemoState();
 }
 
-class MapsDemoState extends State<MapsDemo> {
+class MapsDemoState extends State<MapsDemo>
+    with AutomaticKeepAliveClientMixin<MapsDemo> {
   GoogleMapController mapController;
   Map<String, double> currentLocation;
 
@@ -101,4 +102,8 @@ class MapsDemoState extends State<MapsDemo> {
       mapController = controller;
     });
   }
+
+  // TODO: implement wantKeepAlive
+  @override
+  bool get wantKeepAlive => true;
 }

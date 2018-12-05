@@ -8,7 +8,8 @@ class ProfileScreen extends StatefulWidget {
   ProfileScreenState createState() => ProfileScreenState();
 }
 
-class ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen>
+    with AutomaticKeepAliveClientMixin<ProfileScreen> {
   UserInfo userInfo;
 
   @override
@@ -24,26 +25,44 @@ class ProfileScreenState extends State<ProfileScreen> {
     String email = userInfo?.user?.email ?? '';
     String name = userInfo?.user?.name ?? '';
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text("Profile Screen"),
-      ),
-      body: Center(
-          child: Column(
-        children: <Widget>[
-          RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Go back!'),
+        body: NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+                title: Container(
+                  margin: EdgeInsets.only(top: 40.0),
+                  child: Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://avatars0.githubusercontent.com/u/20509711?s=40&v=4'),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 5.0),
+                        child: Text(name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+                background: Image.network(
+                  "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
+                  fit: BoxFit.cover,
+                )),
           ),
-          Text('Token: ' + token),
-          Text('Email: ' + email),
-          Text('Name: ' + name),
-        ],
-      )),
-    );
+        ];
+      },
+      body: Center(
+        child: Text("Sample Text"),
+      ),
+    ));
   }
 
   loadLocalStorage() async {
@@ -58,4 +77,8 @@ class ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
+
+  // TODO: implement wantKeepAlive
+  @override
+  bool get wantKeepAlive => true;
 }

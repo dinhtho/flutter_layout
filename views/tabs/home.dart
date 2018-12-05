@@ -5,7 +5,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => HomeState();
 }
 
-class HomeState extends State<HomeScreen> {
+class HomeState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,4 +44,8 @@ class HomeState extends State<HomeScreen> {
       ),
     );
   }
+
+  // TODO: implement wantKeepAlive
+  @override
+  bool get wantKeepAlive => true;
 }
