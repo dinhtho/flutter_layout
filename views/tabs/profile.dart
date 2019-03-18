@@ -21,96 +21,14 @@ class ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    String token = userInfo?.token ?? '';
-    String email = userInfo?.user?.email ?? '';
-    String name = userInfo?.user?.name ?? '';
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                  title: Container(
-                    margin: EdgeInsets.only(top: 40.0),
-                    child: Row(
-                      children: <Widget>[
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              'https://avatars0.githubusercontent.com/u/20509711?s=40&v=4'),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5.0),
-                          child: Text(name,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                  background: Image.network(
-                    "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ];
-        },
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              _ContactCategory(
-                icon: Icons.contact_mail,
-                children: <Widget>[
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send personal e-mail',
-                    onPressed: () {},
-                    lines: const <String>[
-                      'ali_connors@example.com',
-                      'Personal',
-                    ],
-                  ),
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send work e-mail',
-                    onPressed: () {},
-                    lines: const <String>[
-                      'aliconnors@example.com',
-                      'Work',
-                    ],
-                  ),
-                ],
-              ),
-              _ContactCategory(
-                icon: Icons.contact_mail,
-                children: <Widget>[
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send personal e-mail',
-                    onPressed: () {},
-                    lines: const <String>[
-                      'ali_connors@example.com',
-                      'Personal',
-                    ],
-                  ),
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send work e-mail',
-                    onPressed: () {},
-                    lines: const <String>[
-                      'aliconnors@example.com',
-                      'Work',
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          TitleWidget(),
+          LinearLayoutWidget(),
+          RelativeLayoutWidget()
+        ],
       ),
     );
   }
@@ -119,12 +37,14 @@ class ProfileScreenState extends State<ProfileScreen>
     final prefs = await SharedPreferences.getInstance();
 
     final userInfoRaw = prefs.getString('userInfo');
-    var jsonRaw = json.decode(userInfoRaw);
-    var userInfo = UserInfo.fromJson(jsonRaw);
-    if (userInfo != null) {
-      setState(() {
-        this.userInfo = userInfo;
-      });
+    if (userInfoRaw != null) {
+      var jsonRaw = json.decode(userInfoRaw);
+      var userInfo = UserInfo.fromJson(jsonRaw);
+      if (userInfo != null) {
+        setState(() {
+          this.userInfo = userInfo;
+        });
+      }
     }
   }
 
@@ -133,79 +53,143 @@ class ProfileScreenState extends State<ProfileScreen>
   bool get wantKeepAlive => true;
 }
 
-class _ContactCategory extends StatelessWidget {
-  const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
-
-  final IconData icon;
-  final List<Widget> children;
-
+class LinearLayoutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
+    // TODO: implement build
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: themeData.dividerColor))),
-      child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subhead,
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  width: 72.0,
-                  child: Icon(icon, color: themeData.primaryColor)),
-              Expanded(child: Column(children: children))
-            ],
+      width: double.infinity,
+      height: 200,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    color: Colors.brown,
+                    width: 10,
+                    height: 30,
+                  ),
+                  Container(
+                    color: Colors.yellow,
+                    width: 30,
+                    height: 30,
+                  ),
+                  Container(
+                    color: Colors.deepPurple,
+                    width: 20,
+                    height: 30,
+                  )
+                ],
+              ),
+              color: Colors.red,
+              height: double.infinity,
+            ),
+            flex: 1,
           ),
-        ),
+          Expanded(
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Text('2'),
+              color: Colors.blue,
+              height: double.infinity,
+            ),
+            flex: 2,
+          ),
+          Expanded(
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Text('3'),
+              color: Colors.green,
+              height: double.infinity,
+            ),
+            flex: 3,
+          ),
+        ],
       ),
     );
   }
 }
 
-class _ContactItem extends StatelessWidget {
-  _ContactItem({Key key, this.icon, this.lines, this.tooltip, this.onPressed})
-      : assert(lines.length > 1),
-        super(key: key);
-
-  final IconData icon;
-  final List<String> lines;
-  final String tooltip;
-  final VoidCallback onPressed;
-
+class RelativeLayoutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    final List<Widget> columnChildren = lines
-        .sublist(0, lines.length - 1)
-        .map<Widget>((String line) => Text(line))
-        .toList();
-    columnChildren.add(Text(lines.last, style: themeData.textTheme.caption));
-
-    final List<Widget> rowChildren = <Widget>[
-      Expanded(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: columnChildren))
-    ];
-    if (icon != null) {
-      rowChildren.add(SizedBox(
-          width: 72.0,
-          child: IconButton(
-              icon: Icon(icon),
-              color: themeData.primaryColor,
-              onPressed: onPressed)));
-    }
-    return MergeSemantics(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: rowChildren)),
+    // TODO: implement build
+    return Container(
+      width: double.infinity,
+      height: 200,
+      color: Colors.black,
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: AlignmentDirectional.bottomStart,
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Text('1'),
+              color: Colors.red,
+              width: 50,
+              height: 50,
+            ),
+          ),
+          Align(
+            alignment: AlignmentDirectional.center,
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Text('2'),
+              color: Colors.blue,
+              width: 50,
+              height: 50,
+            ),
+          ),
+          Align(
+            alignment: AlignmentDirectional.topEnd,
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: Text('3'),
+              color: Colors.red,
+              width: 50,
+              height: 50,
+            ),
+          )
+        ],
+      ),
     );
+  }
+}
+
+class TitleWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+
+    return Container(
+      padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+      margin: EdgeInsets.only(top: statusBarHeight),
+      height: 50.0,
+      width: double.infinity,
+      color: Colors.blue,
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Image(
+              image: AssetImage('assets/images/ic_login.png'),
+              height: double.infinity,
+            ),
+          ),
+          Align(
+            child: Text(
+              "Layout Demo",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ],
+      ),
+    );
+    ;
   }
 }

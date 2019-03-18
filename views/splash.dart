@@ -56,11 +56,13 @@ class SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   checkLogin() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final userInfoRaw = prefs.getString('userInfo');
-    var jsonRaw = json.decode(userInfoRaw);
-    var userInfo = UserInfo.fromJson(jsonRaw);
     var navigatedScreen;
-    if (userInfo != null && userInfo.token != null) {
+    final userInfoRaw = prefs.getString('userInfo');
+
+    if (userInfoRaw != null) {
+      var jsonRaw = json.decode(userInfoRaw);
+      var userInfo = UserInfo.fromJson(jsonRaw);
+      print(userInfo.token);
       navigatedScreen = DashboardScreen();
     } else {
       navigatedScreen = LoginScreen();

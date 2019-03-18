@@ -19,6 +19,8 @@ class NetworkProvider {
         throw new Exception("Error while fetching data");
       }
       return new JsonDecoder().convert(response.body);
+    }, onError: (e) {
+      return e;
     });
   }
 }

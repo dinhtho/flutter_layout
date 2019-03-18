@@ -144,19 +144,19 @@ class LoginState extends State<LoginScreen> {
     setState(() {
       showLoading = true;
     });
-    var response = await NetworkProvider.post(
-        'login', new LoginRequest(emailCl.text, pwCl.text, true).toJson());
+//    var response = await NetworkProvider.post(
+//        'login', new LoginRequest(emailCl.text, pwCl.text, true).toJson());
     setState(() {
       showLoading = false;
     });
 
-    if (response['data'] != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userInfo', json.encode(response['data']));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardScreen()),
-      );
-    }
+//    if (!(response is Exception) && response['data'] != null) {
+//      SharedPreferences prefs = await SharedPreferences.getInstance();
+//      await prefs.setString('userInfo', json.encode(response['data']));
+//    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => DashboardScreen()),
+    );
   }
 }
