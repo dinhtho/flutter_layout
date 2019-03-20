@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tabs/profile.dart';
-import 'tabs/home.dart';
+import 'tabs/home/home.dart';
 import 'tabs/map.dart';
 
 class DashboardScreen extends StatefulWidget {

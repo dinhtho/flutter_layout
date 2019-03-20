@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../model/authentication.dart';
+import '../../components/components.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -25,7 +26,10 @@ class ProfileScreenState extends State<ProfileScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          TitleWidget(),
+          TitleWidget(
+            title: 'Layout Demo',
+            image: AssetImage('assets/images/ic_login.png'),
+          ),
           LinearLayoutWidget(),
           RelativeLayoutWidget()
         ],
@@ -66,7 +70,7 @@ class LinearLayoutWidget extends StatelessWidget {
             child: Container(
               alignment: AlignmentDirectional.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
@@ -158,38 +162,5 @@ class RelativeLayoutWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class TitleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-
-    return Container(
-      padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-      margin: EdgeInsets.only(top: statusBarHeight),
-      height: 50.0,
-      width: double.infinity,
-      color: Colors.blue,
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Image(
-              image: AssetImage('assets/images/ic_login.png'),
-              height: double.infinity,
-            ),
-          ),
-          Align(
-            child: Text(
-              "Layout Demo",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ],
-      ),
-    );
-    ;
   }
 }
