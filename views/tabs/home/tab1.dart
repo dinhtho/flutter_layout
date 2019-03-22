@@ -58,9 +58,9 @@ class Tab1State extends State<Tab1> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  DotIndicator(scale: 0),
-                  DotIndicator(scale: 0),
-                  DotIndicator(scale: 0)
+                  DotIndicator(page: page, position: 0),
+                  DotIndicator(page: page, position: 1),
+                  DotIndicator(page: page, position: 2),
                 ],
               ))
         ],
@@ -88,17 +88,21 @@ class Tab1State extends State<Tab1> {
 class DotIndicator extends StatelessWidget {
   double width = 5;
   double height = 5;
-  double scale;
+  final double page;
+  final int position;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    double scale = max(0, 1 - (page - position).abs()) + 1.0;
+
+    print(scale);
+
     return Container(
-      width: width + width * scale,
-      height: height + height * scale,
+      width: width * scale,
+      height: height * scale,
       decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
     );
   }
 
-  DotIndicator({@required this.scale});
+  DotIndicator({@required this.page, @required this.position});
 }
