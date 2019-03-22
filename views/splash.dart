@@ -50,7 +50,8 @@ class SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             }
           });
 
-    animationController0.forward();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => animationController0.forward());
   }
 
   checkLogin() async {

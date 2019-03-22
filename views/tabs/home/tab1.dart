@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'dart:async';
 
 class Tab1 extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class Tab1 extends StatefulWidget {
 class Tab1State extends State<Tab1> {
   var colors = [Colors.red, Colors.blue, Colors.green];
   final pageController = PageController();
+  Timer timer;
 
   double page;
   int currentPos;
@@ -19,6 +21,25 @@ class Tab1State extends State<Tab1> {
     super.initState();
     page = pageController.initialPage.toDouble();
     currentPos = pageController.initialPage;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => autoScrollPageView());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    pageController.dispose();
+    timer?.cancel();
+  }
+
+  void autoScrollPageView() {
+    timer = Timer.periodic(
+        const Duration(seconds: 2),
+        (Timer t) => pageController.animateToPage(
+            currentPos < 3 ? currentPos++ : 0,
+            duration: const Duration(seconds: 1),
+            curve: Curves.linear));
   }
 
   @override
@@ -39,11 +60,12 @@ class Tab1State extends State<Tab1> {
                     });
                   }
                 },
-                child: PageView.builder(
-                  itemBuilder: (context, position) {
-                    return buildPage(context, position);
-                  },
-                  itemCount: colors.length,
+                child: PageView(
+                  children: <Widget>[
+                    buildPage(context, 0),
+                    buildPage(context, 1),
+                    buildPage(context, 2)
+                  ],
                   controller: pageController,
                   onPageChanged: (pos) {
                     setState(() {
@@ -94,8 +116,6 @@ class DotIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double scale = max(0, 1 - (page - position).abs()) + 1.0;
-
-    print(scale);
 
     return Container(
       width: width * scale,
