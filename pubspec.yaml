@@ -22,6 +22,7 @@ dependencies:
   location: ^1.4.1
   cupertino_icons: ^0.1.2
   http: any
+  rxdart: 0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -43,8 +44,7 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-        - assets/images/ic_text_basetax.png
-        - assets/images/ic_login.png
+        - assets/images/
   fonts:
         - family: WorkSans
           fonts:

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/components/components.dart';
+import 'package:flutter_app/model/authentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../../model/authentication.dart';
-import '../../components/components.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
